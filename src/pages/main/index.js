@@ -4,12 +4,6 @@ export default  class Main extends Component {
     config = {
         navigationBarTitleText: '首页',
     }
-    componentWillMount(){
-        // console.log("111111111111");
-        Taro.navigateTo({
-            url:'/pages/login/index'
-        })
-    }
 
     render(){
         return <View>
