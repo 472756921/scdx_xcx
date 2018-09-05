@@ -16,7 +16,8 @@ class App extends Component {
     pages: [
       'pages/index/index',
       'pages/main/index',
-      'pages/login/index'
+      'pages/login/index',
+      'pages/classevaluation/index'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -30,10 +31,26 @@ class App extends Component {
 
                 pagePath: 'pages/index/index',
                 text: '首页',
+                iconPath: 'asset/tabBar_icon_index.png',
+                selectedIconPath: 'asset/tabBar_icon_index_select.png'
             },
             {
-                pagePath: "pages/index/index",
-                text: "订单",
+                pagePath: "pages/classevaluation/index",
+                text: "班级评估",
+                iconPath: "asset/tabBar_icon_order.png",
+                selectedIconPath: "asset/tabBar_icon_order_select.png"
+            },
+            {
+              pagePath: "pages/index/index",
+              text: "教学评估",
+              iconPath: "asset/tabBar_icon_order.png",
+              selectedIconPath: "asset/tabBar_icon_order_select.png"
+            },
+           {
+              pagePath: "pages/index/index",
+              text: "我的",
+              iconPath: "asset/tabBar_icon_order.png",
+              selectedIconPath: "asset/tabBar_icon_order_select.png"
             }
         ],
         color:"#9B9B9B",

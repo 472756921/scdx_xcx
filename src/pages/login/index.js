@@ -37,9 +37,7 @@ class Index extends Component {
   componentDidHide () { }
 
   login(){
-      Taro.navigateTo({
-          url:'/pages/main/index'
-      })
+      Taro.navigateBack()
   }
 
   render () {
