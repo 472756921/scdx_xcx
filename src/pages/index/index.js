@@ -6,12 +6,14 @@ export default  class Main extends Component {
         navigationBarTitleText: '首页',
     }
     componentWillMount(){
-        //console.log("111111111111");
-        /*Taro.navigateTo({
+        console.log("111111111111");
+        Taro.navigateTo({
             url:'/pages/login/index'
-        })*/
+        });
     }
+  componentDidMount(){
 
+  }
     render(){
         return <View className='index_main'>
               <View className='title'>XX专题培训班教学安排</View>

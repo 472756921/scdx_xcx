@@ -17,7 +17,8 @@ class App extends Component {
       'pages/index/index',
       'pages/main/index',
       'pages/login/index',
-      'pages/classevaluation/index'
+      'pages/classevaluation/index',
+      'pages/educationevaluation/index'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -41,7 +42,7 @@ class App extends Component {
                 selectedIconPath: "asset/tabBar_icon_order_select.png"
             },
             {
-              pagePath: "pages/index/index",
+              pagePath: "pages/educationevaluation/index",
               text: "教学评估",
               iconPath: "asset/tabBar_icon_order.png",
               selectedIconPath: "asset/tabBar_icon_order_select.png"

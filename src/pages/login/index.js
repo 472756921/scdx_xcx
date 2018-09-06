@@ -30,7 +30,12 @@ class Index extends Component {
     //console.log(this.props, nextProps)
   }
 
-  componentWillUnmount () { }
+  componentWillMount(){
+    console.log("11111111");
+  }
+  componentWillUnmount () {
+
+  }
 
   componentDidShow () { }
 
