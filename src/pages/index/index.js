@@ -6,10 +6,31 @@ export default  class Main extends Component {
         navigationBarTitleText: '首页',
     }
     componentWillMount(){
-        console.log("111111111111");
+        /*console.log("111111111111");
         Taro.navigateTo({
             url:'/pages/login/index'
+        });*/
+        wx.login({
+            success: function(res) {
+               // console.log("res",res);
+                if (res.code) {
+                    //发起网络请求
+                    wx.request({
+                        url: 'http://gxjd.scu.edu.cn:8086/weChat/login.do',
+                        data: {
+                            code: res.code,
+                            studentCard:'0005'
+                        },
+                        success: function(res) {
+                            console.log(res.data)
+                        }
+                    })
+                } else {
+                    console.log('登录失败！' + res.errMsg)
+                }
+            }
         });
+
     }
   componentDidMount(){
 

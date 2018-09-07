@@ -6,7 +6,6 @@ import { add, minus, asyncAdd } from '../../actions/counter'
 
 import './index.less'
 
-
 @connect(({ counter }) => ({
   counter
 }), (dispatch) => ({
@@ -20,6 +19,7 @@ import './index.less'
     dispatch(asyncAdd())
   }
 }))
+
 class Index extends Component {
 
     config = {

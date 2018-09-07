@@ -11,7 +11,9 @@ import './app.less'
 const store = configStore()
 
 class App extends Component {
-
+  constructor(props){
+      super(props);
+  }
   config = {
     pages: [
       'pages/index/index',
@@ -60,10 +62,6 @@ class App extends Component {
   }
 
   componentWillMount(){
-     // console.log("111111111111");
-      Taro.navigateTo({
-          url:'/pages/login/index'
-      })
   }
 
 
