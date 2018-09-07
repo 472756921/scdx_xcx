@@ -9,17 +9,63 @@ export default  class ClassEvaluation extends Component{
     this.state = {
       current: 0,
       list: [
-        {value: '很满意', text: '很满意', checked: true},
-        {value: '满意', text: '满意', checked: false},
-        {value: '一般', text: '一般', checked: false},
-        {value: '不满意', text: '不满意', checked: false},
+        {value: '1', text: '很满意', checked: true},
+        {value: '2', text: '满意', checked: false},
+        {value: '3', text: '一般', checked: false},
+        {value: '4', text: '不满意', checked: false},
       ],
+      postList: {
+        "itemId":"16",      //项目ID
+        "studentId":"5",   //学员ID
+        "classTheme":"1",   //专题班主题
+        "courses":"1",     //课程设置
+        "details":"1",        //教学内容
+        "mode":"1",        //教学方式
+        "datum":"1",       //资料准备
+        "coordinate":"1",       //教学组织协调
+        "classServe":"1"       //班级管理服务
+      },
     };
   }
   handleClick(index){
     this.setState({
       current: index
     })
+  }
+  radioChange(type,t){
+    let d = t.detail.value;
+    let data = JSON.parse(JSON.stringify(this.state.postList));
+    switch (type){
+      case 'classTheme':
+        data.classTheme = d;
+        break;
+      case 'courses':
+        data.courses = d;
+        break;
+      case 'details':
+        data.details = d;
+        break;
+      case 'mode':
+        data.mode = d;
+        break;
+      case 'datum':
+        data.datum = d;
+        break;
+      case 'coordinate':
+        data.coordinate = d;
+        break;
+      case 'classServe':
+        data.classServe = d;
+        break;
+    }
+    this.setState({
+      ...this.state,
+      postList: data,
+    })
+  }
+
+  tijiao() {
+    console.log(this.state.postList);
   }
 
   render(){
@@ -34,11 +80,11 @@ export default  class ClassEvaluation extends Component{
            <AtTabsPane>
              <View className='tab-content'>
                专题班主题：
-                 <RadioGroup >
+                 <RadioGroup onChange={this.radioChange.bind(this,'classTheme')}>
                    {this.state.list.map((item, i) => {
                      return (
                        <Label className='radio-list__label' for={i} key={i}>
-                         <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
                        </Label>
                      )
                    })}
@@ -46,7 +92,7 @@ export default  class ClassEvaluation extends Component{
              </View>
              <View className='tab-content'>
                课程设置： &nbsp;&nbsp;
-                 <RadioGroup >
+                 <RadioGroup onChange={this.radioChange.bind(this,'courses')}>
                    {this.state.list.map((item, i) => {
                      return (
                        <Label className='radio-list__label' for={i} key={i}>
@@ -58,7 +104,7 @@ export default  class ClassEvaluation extends Component{
              </View>
              <View className='tab-content'>
                教学内容： &nbsp;&nbsp;
-                 <RadioGroup >
+                 <RadioGroup onChange={this.radioChange.bind(this,'details')}>
                    {this.state.list.map((item, i) => {
                      return (
                        <Label className='radio-list__label' for={i} key={i}>
@@ -70,7 +116,7 @@ export default  class ClassEvaluation extends Component{
              </View>
              <View className='tab-content'>
                教学方式： &nbsp;&nbsp;
-                 <RadioGroup >
+                 <RadioGroup onChange={this.radioChange.bind(this,'mode')}>
                    {this.state.list.map((item, i) => {
                      return (
                        <Label className='radio-list__label' for={i} key={i}>
@@ -82,7 +128,7 @@ export default  class ClassEvaluation extends Component{
              </View>
              <View className='tab-content'>
                资料准备： &nbsp;&nbsp;
-                 <RadioGroup >
+                 <RadioGroup onChange={this.radioChange.bind(this,'datum')} >
                    {this.state.list.map((item, i) => {
                      return (
                        <Label className='radio-list__label' for={i} key={i}>
@@ -94,7 +140,7 @@ export default  class ClassEvaluation extends Component{
              </View>
              <View className='tab-content'>
                教学组织协调：
-                 <RadioGroup >
+                 <RadioGroup onChange={this.radioChange.bind(this,'coordinate')} >
                    {this.state.list.map((item, i) => {
                      return (
                        <Label className='radio-list__label' for={i} key={i}>
@@ -106,7 +152,7 @@ export default  class ClassEvaluation extends Component{
              </View>
              <View className='tab-content'>
                班级管理服务：
-                 <RadioGroup >
+                 <RadioGroup onChange={this.radioChange.bind(this,'classServe')} >
                    {this.state.list.map((item, i) => {
                      return (
                        <Label className='radio-list__label' for={i} key={i}>
@@ -116,7 +162,7 @@ export default  class ClassEvaluation extends Component{
                    })}
                  </RadioGroup>
              </View>
-             <Button size='mini' style={{display:'block', margin:'1rem auto', 'width':'100px'}}>提交</Button>
+             <Button size='mini' style={{display:'block', margin:'1rem auto', 'width':'100px'}} onClick={this.tijiao.bind(this)}>提交</Button>
            </AtTabsPane>
 
            <AtTabsPane style='line-height: 24px'>
