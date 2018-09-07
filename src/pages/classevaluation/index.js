@@ -1,13 +1,11 @@
 import Taro, { Component } from '@tarojs/taro'
 import { AtTabs, AtTabsPane } from 'taro-ui'
-import { View, Radio, RadioGroup, Label, Button } from '@tarojs/components'
+import { View, Radio, RadioGroup, Label, Button, Text, Textarea } from '@tarojs/components'
 import './index.less'
 
-let  _this;
 export default  class ClassEvaluation extends Component{
   constructor(props){
     super(props);
-    _this = this;
     this.state = {
       current: 0,
       list: [
@@ -18,30 +16,9 @@ export default  class ClassEvaluation extends Component{
       ],
     };
   }
-  componentDidMount() {
-    let a = document.getElementsByClassName('radio-list__radio_1');
-    for(let i=0; i<a.length; i++){
-      a[i].setAttribute('name', 'test');
-    }
-  }
   handleClick(index){
     this.setState({
       current: index
-    })
-  }
-  changeRa(d){
-    let v = d.detail.value;
-    let nl = _this.state.list.map((it) =>{
-      if(it.value === v){
-        it.checked = true;
-      }else {
-        delete it['checked'];
-      }
-      return it;
-    })
-    _this.setState({
-      ..._this.state.current,
-      list: nl
     })
   }
 
@@ -57,7 +34,7 @@ export default  class ClassEvaluation extends Component{
            <AtTabsPane>
              <View className='tab-content'>
                专题班主题：
-                 <RadioGroup onChange={this.changeRa}>
+                 <RadioGroup >
                    {this.state.list.map((item, i) => {
                      return (
                        <Label className='radio-list__label' for={i} key={i}>
@@ -69,7 +46,7 @@ export default  class ClassEvaluation extends Component{
              </View>
              <View className='tab-content'>
                课程设置： &nbsp;&nbsp;
-                 <RadioGroup onChange={this.changeRa}>
+                 <RadioGroup >
                    {this.state.list.map((item, i) => {
                      return (
                        <Label className='radio-list__label' for={i} key={i}>
@@ -81,7 +58,7 @@ export default  class ClassEvaluation extends Component{
              </View>
              <View className='tab-content'>
                教学内容： &nbsp;&nbsp;
-                 <RadioGroup onChange={this.changeRa}>
+                 <RadioGroup >
                    {this.state.list.map((item, i) => {
                      return (
                        <Label className='radio-list__label' for={i} key={i}>
@@ -93,7 +70,7 @@ export default  class ClassEvaluation extends Component{
              </View>
              <View className='tab-content'>
                教学方式： &nbsp;&nbsp;
-                 <RadioGroup onChange={this.changeRa}>
+                 <RadioGroup >
                    {this.state.list.map((item, i) => {
                      return (
                        <Label className='radio-list__label' for={i} key={i}>
@@ -105,7 +82,7 @@ export default  class ClassEvaluation extends Component{
              </View>
              <View className='tab-content'>
                资料准备： &nbsp;&nbsp;
-                 <RadioGroup onChange={this.changeRa}>
+                 <RadioGroup >
                    {this.state.list.map((item, i) => {
                      return (
                        <Label className='radio-list__label' for={i} key={i}>
@@ -117,7 +94,7 @@ export default  class ClassEvaluation extends Component{
              </View>
              <View className='tab-content'>
                教学组织协调：
-                 <RadioGroup onChange={this.changeRa}>
+                 <RadioGroup >
                    {this.state.list.map((item, i) => {
                      return (
                        <Label className='radio-list__label' for={i} key={i}>
@@ -129,7 +106,7 @@ export default  class ClassEvaluation extends Component{
              </View>
              <View className='tab-content'>
                班级管理服务：
-                 <RadioGroup onChange={this.changeRa}>
+                 <RadioGroup >
                    {this.state.list.map((item, i) => {
                      return (
                        <Label className='radio-list__label' for={i} key={i}>
@@ -139,16 +116,118 @@ export default  class ClassEvaluation extends Component{
                    })}
                  </RadioGroup>
              </View>
-             <Button size='mini' style={{display:'block', margin:'1rem auto'}}>提交</Button>
+             <Button size='mini' style={{display:'block', margin:'1rem auto', 'width':'100px'}}>提交</Button>
            </AtTabsPane>
-           <AtTabsPane>
-             <View className='tab-content'>后勤服务评估</View>
+
+           <AtTabsPane style='line-height: 24px'>
+             <Text className='tab-content' style={{float:'left',height: '90px'}}>餐饮：</Text>
+             <View className='tab-content'>
+               菜品卫生
+               <RadioGroup >
+                 {this.state.list.map((item, i) => {
+                   return (
+                     <Label className='radio-list__label' for={i} key={i}>
+                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                     </Label>
+                   )
+                 })}
+               </RadioGroup>
+               <Text style={{marginTop:'10px',distplay:'block'}}>就餐环境与服务</Text>
+               <RadioGroup >
+                 {this.state.list.map((item, i) => {
+                   return (
+                     <Label className='radio-list__label' for={i} key={i}>
+                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                     </Label>
+                   )
+                 })}
+               </RadioGroup>
+             </View>
+             <Text className='tab-content' style={{float:'left',height: '90px'}}>住宿：</Text>
+             <View className='tab-content'>
+               房间设施与卫生条件
+               <RadioGroup >
+                 {this.state.list.map((item, i) => {
+                   return (
+                     <Label className='radio-list__label' for={i} key={i}>
+                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                     </Label>
+                   )
+                 })}
+               </RadioGroup>
+               <Text style={{marginTop:'10px',distplay:'block'}}>客房服务及时有效</Text>
+               <RadioGroup >
+                 {this.state.list.map((item, i) => {
+                   return (
+                     <Label className='radio-list__label' for={i} key={i}>
+                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                     </Label>
+                   )
+                 })}
+               </RadioGroup>
+             </View>
+             <Text className='tab-content' style={{float:'left',height: '90px'}}>交通：</Text>
+             <View className='tab-content'>
+               接送及时
+               <RadioGroup >
+                 {this.state.list.map((item, i) => {
+                   return (
+                     <Label className='radio-list__label' for={i} key={i}>
+                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                     </Label>
+                   )
+                 })}
+               </RadioGroup>
+               <Text style={{marginTop:'10px',distplay:'block'}}>司机态度</Text>
+               <RadioGroup >
+                 {this.state.list.map((item, i) => {
+                   return (
+                     <Label className='radio-list__label' for={i} key={i}>
+                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                     </Label>
+                   )
+                 })}
+               </RadioGroup>
+             </View>
+             <Button size='mini' style={{display:'block', margin:'1rem auto', 'width':'100px'}}>提交</Button>
            </AtTabsPane>
-           <AtTabsPane>
-             <View className='tab-content'>综合评估</View>
+
+           <AtTabsPane style='line-height: 24px'>
+             <View className='tab-content'>
+               您对本期培训班的总体满意度是
+               <RadioGroup >
+                 {this.state.list.map((item, i) => {
+                   return (
+                     <Label className='radio-list__label' for={i} key={i}>
+                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                     </Label>
+                   )
+                 })}
+               </RadioGroup>
+               <Text style={{marginTop:'10px',distplay:'block'}}>您参加本期培训后的总体感觉是</Text>
+               <RadioGroup >
+                 {this.state.list.map((item, i) => {
+                   return (
+                     <Label className='radio-list__label' for={i} key={i}>
+                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                     </Label>
+                   )
+                 })}
+               </RadioGroup>
+             </View>
+             <Button size='mini' style={{display:'block', margin:'1rem auto', 'width':'100px'}}>提交</Button>
            </AtTabsPane>
+
            <AtTabsPane>
-             <View className='tab-content'>建议</View>
+             <View className='tab-content'>
+               <Text>自己的收获主要是</Text>
+               <Textarea style='margin: 6px;background:#fff;width:85%;min-height:80px;padding:0 30rpx;border:1px solid #eee' autoHeight/>
+               <Text>您对改进培训班的意见和建议</Text>
+               <Textarea style='margin: 6px;background:#fff;width:85%;min-height:80px;padding:0 30rpx;border:1px solid #eee' autoHeight/>
+             </View>
+
+
+             <Button size='mini' style={{display:'block', margin:'1rem auto', 'width':'100px'}}>提交</Button>
            </AtTabsPane>
          </AtTabs>
        </View>
