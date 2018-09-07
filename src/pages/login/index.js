@@ -24,14 +24,21 @@ class Index extends Component {
 
     config = {
         navigationBarTitleText: '登录',
-  }
+    }
+    constructor(props){
+        super(props);
+        this.state={
+            studentId:""
+        }
+    }
 
   componentWillReceiveProps (nextProps) {
     //console.log(this.props, nextProps)
   }
 
   componentWillMount(){
-    console.log("11111111");
+    //console.log("11111111");
+     // wx.reLaunch();
   }
   componentWillUnmount () {
 
@@ -42,7 +49,43 @@ class Index extends Component {
   componentDidHide () { }
 
   login(){
-      Taro.navigateBack()
+       // let studentId =  this.refs.studentId.value
+     // console.log("studentId",this.state.studentId);
+      let _this =  this;
+
+      wx.login({
+          success: function(res) {
+              // console.log("res",res);
+              if (res.code) {
+                  //发起网络请求
+                  wx.request({
+                      url: 'http://202.115.33.207:8080/weChat/login.do',
+                      data: {
+                          code: res.code,
+                          studentCard: _this.state.studentId
+                      },
+                      success: function(res) {
+                          // console.log(res.data)
+                          if(res.data.msg === "Success"){
+                              Taro.reLaunch({
+                                  url: "/pages/index/index"
+                              });
+                              Taro.setStorageSync("userData",res.data.data)
+                          }
+                      }
+                  })
+              } else {
+                  console.log('登录失败！' + res.errMsg)
+              }
+          }
+      });
+     // Taro.navigateBack()
+  }
+  putStudentId(e){
+      //console.log("e", e.target.value);
+      this.setState({
+          "studentId": e.target.value
+      })
   }
 
   render () {
@@ -55,13 +98,13 @@ class Index extends Component {
         <View>Hello, World</View>*/}
           <View className='formLogin'>
               <View className='line-box'>
-                  <View className='name'>登录名</View>
-                  <View><Input type='text' placeholder='请输入用户名' name='userName'/></View>
+                  <View className='name'>学号</View>
+                  <View><Input type='text' onChange={this.putStudentId.bind(this)} placeholder='请输入学号' name='studentId' value={this.state.studentId}/></View>
               </View>
-              <View className='line-box'>
+              {/*<View className='line-box'>
                   <View className='name'>密码</View>
                   <View><Input type='password' placeholder='请输入密码' name='userName'/></View>
-              </View>
+              </View>*/}
               <View className='loginBtn' onClick={this.login.bind(this)}>
                   <Button className="btn-max-w" plain type="primary">登录</Button>
               </View>

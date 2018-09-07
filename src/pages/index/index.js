@@ -10,32 +10,25 @@ export default  class Main extends Component {
         Taro.navigateTo({
             url:'/pages/login/index'
         });*/
-        wx.login({
-            success: function(res) {
-               // console.log("res",res);
-                if (res.code) {
-                    //发起网络请求
-                    wx.request({
-                        url: 'http://gxjd.scu.edu.cn:8086/weChat/login.do',
-                        data: {
-                            code: res.code,
-                            studentCard:'0005'
-                        },
-                        success: function(res) {
-                            console.log(res.data)
-                        }
-                    })
-                } else {
-                    console.log('登录失败！' + res.errMsg)
-                }
-            }
-        });
 
+       // console.log("userData", Taro.getStorageSync('userData'));
+        if(!Taro.getStorageSync('userData')){
+            Taro.redirectTo({
+                url:'/pages/login/index'
+            });
+        }
     }
   componentDidMount(){
-
+    console.log("111111111111");
+      /**
+       * 这里就初始化数据
+       */
   }
     render(){
+        /**
+         *  UserData
+         */
+        //console.log("UserData---------------");
         return <View className='index_main'>
               <View className='title'>XX专题培训班教学安排</View>
           <ScrollView className='scrollview'
