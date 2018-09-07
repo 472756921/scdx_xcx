@@ -20,13 +20,14 @@ class App extends Component {
       'pages/main/index',
       'pages/login/index',
       'pages/classevaluation/index',
-      'pages/educationevaluation/index'
+      'pages/educationevaluation/index',
+      'pages/my/index'
     ],
     window: {
       backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'black'
+      navigationBarBackgroundColor: '#05bb04',
+      navigationBarTitleText: '四川大学',
+      navigationBarTextStyle: 'white'
     },
     tabBar: {
         list: [
@@ -50,10 +51,10 @@ class App extends Component {
               selectedIconPath: "asset/tabBar_icon_order_select.png"
             },
            {
-              pagePath: "pages/index/index",
+              pagePath: "pages/my/index",
               text: "我的",
-              iconPath: "asset/tabBar_icon_order.png",
-              selectedIconPath: "asset/tabBar_icon_order_select.png"
+              iconPath: "asset/tabBar_icon_main.png",
+              selectedIconPath: "asset/tabBar_icon_main_select.png"
             }
         ],
         color:"#9B9B9B",

@@ -12,11 +12,11 @@ export default  class Main extends Component {
         });*/
 
        // console.log("userData", Taro.getStorageSync('userData'));
-        if(!Taro.getStorageSync('userData')){
+        /*if(!Taro.getStorageSync('userData')){
             Taro.redirectTo({
                 url:'/pages/login/index'
             });
-        }
+        }*/
     }
   componentDidMount(){
     console.log("111111111111");
