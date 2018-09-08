@@ -6,17 +6,12 @@ export default  class Main extends Component {
         navigationBarTitleText: '首页',
     }
     componentWillMount(){
-        /*console.log("111111111111");
-        Taro.navigateTo({
-            url:'/pages/login/index'
-        });*/
-
        // console.log("userData", Taro.getStorageSync('userData'));
-        /*if(!Taro.getStorageSync('userData')){
-            Taro.redirectTo({
-                url:'/pages/login/index'
-            });
-        }*/
+       if(!Taro.getStorageSync('userData')){
+          Taro.redirectTo({
+              url:'/pages/login/index'
+          });
+        }
     }
   componentDidMount(){
     console.log("111111111111");

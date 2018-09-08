@@ -15,40 +15,89 @@ export default  class ClassEvaluation extends Component{
         {value: '4', text: '不满意', checked: false},
       ],
       postList: {
-        "itemId":"16",      //项目ID
-        "studentId":"5",   //学员ID
-        "classTheme":"1",   //专题班主题
-        "courses":"1",     //课程设置
-        "details":"1",        //教学内容
-        "mode":"1",        //教学方式
-        "datum":"1",       //资料准备
-        "coordinate":"1",       //教学组织协调
-        "classServe":"1"       //班级管理服务
+        "itemId": Taro.getStorageSync('userData').itemId,      //项目ID
+        "studentId":Taro.getStorageSync('userData').studentId,   //学员ID
+        "classTheme":"",   //专题班主题
+        "courses":"",     //课程设置
+        "details":"",        //教学内容
+        "mode":"",        //教学方式
+        "datum":"",       //资料准备
+        "coordinate":"",       //教学组织协调
+        "classServe":""       //班级管理服务
       },
       postList2: {
-        "itemId":"16",      //项目ID
-        "studentId":"5",   //学员ID
-        "dish":"1",           //菜品卫生
-        "environmentServe":"1",           //就餐环境与服务
-        "roomHealth":"2",           //房间设施与卫生条件
-        "roomServe":"1",           //客房服务及时有效
-        "pickUp":"1",           //接送及时
-        "driverAttitude":"1"
+        "itemId": Taro.getStorageSync('userData').itemId,      //项目ID
+        "studentId":Taro.getStorageSync('userData').studentId,   //学员ID
+        "dish":"",           //菜品卫生
+        "environmentServe":"",           //就餐环境与服务
+        "roomHealth":"",           //房间设施与卫生条件
+        "roomServe":"",           //客房服务及时有效
+        "pickUp":"",           //接送及时
+        "driverAttitude":""
       },
       postList3: {
-        "itemId":"16",      //项目ID
-        "studentId":"5",   //学员ID
-        "globalSatisfaction":"1",           //您对本期培训班的总体满意度是
-        "globalFeel":"1"          //您参加本期培训后的总体感觉是
+        "itemId": Taro.getStorageSync('userData').itemId,      //项目ID
+        "studentId":Taro.getStorageSync('userData').studentId,   //学员ID
+        "globalSatisfaction":"",           //您对本期培训班的总体满意度是
+        "globalFeel":""          //您参加本期培训后的总体感觉是
       },
       postList4: {
-        "itemId":"16",      //项目ID
-        "studentId":"5",   //学员ID
-        "overallSatisfaction":"1",           //自己的收获主要是
-        "commentSuggestion":"1"          //您对改进培训班的意见和建议
+        "itemId": Taro.getStorageSync('userData').itemId,      //项目ID
+        "studentId":Taro.getStorageSync('userData').studentId,   //学员ID
+        "overallSatisfaction":"",           //自己的收获主要是
+        "commentSuggestion":""          //您对改进培训班的意见和建议
       },
     };
   }
+
+  /**
+   * 初始化数据
+   * @param index
+   */
+  componentWillMount(){
+    this.initData();
+  }
+
+  initData(){
+    let userData = Taro.getStorageSync("userData"), _this =  this;
+    Taro.request({
+      method:'POST',
+      url: 'http://202.115.33.207:8080/gradeEvaluate/getData.do',
+      data: {
+        itemId: userData.itemId,
+        studentId:userData.studentId
+      },
+      header: {
+        'content-type': 'application/x-www-form-urlencoded' // 默认值
+      },
+      dataType:"json",
+      success: function(res) {
+        //console.log(res.data)
+        if(res.data.msg === "Success"){
+          let postList = Object.assign(_this.state.postList, res.data.data[0]),
+          postList2 =  Object.assign(_this.state.postList2, res.data.data[0]),
+          postList3 =  Object.assign(_this.state.postList3, res.data.data[0]),
+          postList4 =  Object.assign(_this.state.postList4, res.data.data[0]);
+
+          _this.setState({
+            postList:postList,
+            postList2: postList2,
+            postList3: postList3,
+            postList4: postList4
+          });
+
+        }
+      }
+    })
+  }
+
+  isnull(data) {
+    if(data == '' || data == null) {
+      return 1;
+    }
+    return data;
+  }
+
   handleClick(index){
     this.setState({
       current: index
@@ -168,6 +217,12 @@ export default  class ClassEvaluation extends Component{
         break;
     };
 
+    for(let d in datas) {
+      if(d != 'id' && d != 'overallSatisfaction' && d != 'commentSuggestion'){
+        datas[d] = this.isnull(datas[d]);
+      }
+    }
+
     wx.request({
       url: 'http://202.115.33.207:8080'+url, //仅为示例，并非真实的接口地址
       data: datas,
@@ -183,7 +238,10 @@ export default  class ClassEvaluation extends Component{
 
   render(){
     const tabList1 = [{ title: '教学管理评估' }, { title: '后勤服务评估' }, { title: '综合评估' },  { title: '建议' }]
-     return  <View className='panel'>
+    let  postList =  this.state.postList, postList2 =  this.state.postList2,  postList3 =  this.state.postList3,
+      postList4 =  this.state.postList4;
+
+    return  <View className='panel'>
        <View className='panel__title'>
          培训班次：四川大学——广西壮族自治区国土资源系统女性干部专题研讨班
          <View>培训时间：2018.5.7-5.11</View>
@@ -197,7 +255,7 @@ export default  class ClassEvaluation extends Component{
                    {this.state.list.map((item, i) => {
                      return (
                        <Label className='radio-list__label' for={i} key={i}>
-                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={(postList.classTheme == item.value||item.value == '1'||false)}> {item.text} </Radio>
                        </Label>
                      )
                    })}
@@ -209,7 +267,7 @@ export default  class ClassEvaluation extends Component{
                    {this.state.list.map((item, i) => {
                      return (
                        <Label className='radio-list__label' for={i} key={i}>
-                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={(postList.courses == item.value||item.value == '1'||false)}> {item.text} </Radio>
                        </Label>
                      )
                    })}
@@ -221,7 +279,7 @@ export default  class ClassEvaluation extends Component{
                    {this.state.list.map((item, i) => {
                      return (
                        <Label className='radio-list__label' for={i} key={i}>
-                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={(postList.details == item.value||item.value == '1'||false)}> {item.text} </Radio>
                        </Label>
                      )
                    })}
@@ -233,7 +291,7 @@ export default  class ClassEvaluation extends Component{
                    {this.state.list.map((item, i) => {
                      return (
                        <Label className='radio-list__label' for={i} key={i}>
-                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={(postList.mode == item.value||item.value == '1'||false)}> {item.text} </Radio>
                        </Label>
                      )
                    })}
@@ -245,7 +303,7 @@ export default  class ClassEvaluation extends Component{
                    {this.state.list.map((item, i) => {
                      return (
                        <Label className='radio-list__label' for={i} key={i}>
-                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={(postList.datum == item.value||item.value == '1'||false)}> {item.text} </Radio>
                        </Label>
                      )
                    })}
@@ -257,7 +315,7 @@ export default  class ClassEvaluation extends Component{
                    {this.state.list.map((item, i) => {
                      return (
                        <Label className='radio-list__label' for={i} key={i}>
-                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={(postList.coordinate == item.value||item.value == '1'||false)}> {item.text} </Radio>
                        </Label>
                      )
                    })}
@@ -269,7 +327,7 @@ export default  class ClassEvaluation extends Component{
                    {this.state.list.map((item, i) => {
                      return (
                        <Label className='radio-list__label' for={i} key={i}>
-                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={(postList.classServe == item.value||item.value == '1'||false)}> {item.text} </Radio>
                        </Label>
                      )
                    })}
@@ -286,7 +344,7 @@ export default  class ClassEvaluation extends Component{
                  {this.state.list.map((item, i) => {
                    return (
                      <Label className='radio-list__label' for={i} key={i}>
-                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList2.dish == item.value||item.value == '1'||false)}> {item.text} </Radio>
                      </Label>
                    )
                  })}
@@ -296,7 +354,7 @@ export default  class ClassEvaluation extends Component{
                  {this.state.list.map((item, i) => {
                    return (
                      <Label className='radio-list__label' for={i} key={i}>
-                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList2.environmentServe == item.value||item.value == '1'||false)}> {item.text} </Radio>
                      </Label>
                    )
                  })}
@@ -309,7 +367,7 @@ export default  class ClassEvaluation extends Component{
                  {this.state.list.map((item, i) => {
                    return (
                      <Label className='radio-list__label' for={i} key={i}>
-                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList2.roomHealth == item.value||item.value == '1'||false)}> {item.text} </Radio>
                      </Label>
                    )
                  })}
@@ -319,7 +377,7 @@ export default  class ClassEvaluation extends Component{
                  {this.state.list.map((item, i) => {
                    return (
                      <Label className='radio-list__label' for={i} key={i}>
-                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList2.roomServe == item.value||item.value == '1'||false)}> {item.text} </Radio>
                      </Label>
                    )
                  })}
@@ -332,7 +390,7 @@ export default  class ClassEvaluation extends Component{
                  {this.state.list.map((item, i) => {
                    return (
                      <Label className='radio-list__label' for={i} key={i}>
-                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList2.pickUp == item.value||item.value == '1'||false)}> {item.text} </Radio>
                      </Label>
                    )
                  })}
@@ -342,7 +400,7 @@ export default  class ClassEvaluation extends Component{
                  {this.state.list.map((item, i) => {
                    return (
                      <Label className='radio-list__label' for={i} key={i}>
-                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList2.driverAttitude == item.value||item.value == '1'||false)}> {item.text} </Radio>
                      </Label>
                    )
                  })}
@@ -358,17 +416,18 @@ export default  class ClassEvaluation extends Component{
                  {this.state.list.map((item, i) => {
                    return (
                      <Label className='radio-list__label' for={i} key={i}>
-                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList3.globalSatisfaction == item.value||item.value == '1'||false)}> {item.text} </Radio>
                      </Label>
                    )
                  })}
+
                </RadioGroup>
                <Text style={{marginTop:'10px',distplay:'block'}}>您参加本期培训后的总体感觉是</Text>
                <RadioGroup onChange={this.radioChange_s.bind(this,'globalFeel')}>
                  {this.state.list.map((item, i) => {
                    return (
                      <Label className='radio-list__label' for={i} key={i}>
-                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={item.checked}> {item.text} </Radio>
+                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList3.globalFeel == item.value||item.value == '1'||false)}> {item.text} </Radio>
                      </Label>
                    )
                  })}
@@ -380,9 +439,9 @@ export default  class ClassEvaluation extends Component{
            <AtTabsPane>
              <View className='tab-content'>
                <Text>自己的收获主要是</Text>
-               <Textarea onInput={this.radioChange_f.bind(this,'overallSatisfaction')} style='margin: 6px;background:#fff;width:85%;min-height:80px;padding:0 30rpx;border:1px solid #eee' autoHeight/>
+               <Textarea onInput={this.radioChange_f.bind(this,'overallSatisfaction')} value={postList4.overallSatisfaction} style='margin: 6px;background:#fff;width:85%;min-height:80px;padding:0 30rpx;border:1px solid #eee' autoHeight/>
                <Text>您对改进培训班的意见和建议</Text>
-               <Textarea onInput={this.radioChange_f.bind(this,'commentSuggestion')} style='margin: 6px;background:#fff;width:85%;min-height:80px;padding:0 30rpx;border:1px solid #eee' autoHeight/>
+               <Textarea onInput={this.radioChange_f.bind(this,'commentSuggestion')} value={postList4.commentSuggestion} style='margin: 6px;background:#fff;width:85%;min-height:80px;padding:0 30rpx;border:1px solid #eee' autoHeight/>
              </View>
 
 

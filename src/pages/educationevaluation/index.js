@@ -37,7 +37,8 @@ export default class EducatonEvalution extends Component{
         })
     }
     evalution(item){
-        console.log("item", item);
+        Taro.setStorageSync("datile", item);
+        Taro.navigateTo({url: '/pages/educationevaluation/datile' + '?courseId='+item.courseId+'&teacherId='+item.teacherId});
     }
 
     render(){

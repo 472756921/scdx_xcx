@@ -21,6 +21,7 @@ class App extends Component {
       'pages/login/index',
       'pages/classevaluation/index',
       'pages/educationevaluation/index',
+      'pages/educationevaluation/datile',
       'pages/my/index'
     ],
     window: {
