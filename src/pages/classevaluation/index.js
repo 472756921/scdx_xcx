@@ -18,31 +18,25 @@ export default  class ClassEvaluation extends Component{
       ],
     };
   }
-  componentDidMount() {
-    let a = document.getElementsByClassName('radio-list__radio_1');
-    for(let i=0; i<a.length; i++){
-      a[i].setAttribute('name', 'test');
-    }
-  }
   handleClick(index){
     this.setState({
       current: index
     })
   }
   changeRa(d){
-    let v = d.detail.value;
-    let nl = _this.state.list.map((it) =>{
-      if(it.value === v){
-        it.checked = true;
-      }else {
-        delete it['checked'];
-      }
-      return it;
-    })
-    _this.setState({
-      ..._this.state.current,
-      list: nl
-    })
+    // let v = d.detail.value;
+    // let nl = _this.state.list.map((it) =>{
+    //   if(it.value === v){
+    //     it.checked = true;
+    //   }else {
+    //     delete it['checked'];
+    //   }
+    //   return it;
+    // })
+    // _this.setState({
+    //   ..._this.state.current,
+    //   list: nl
+    // })
   }
 
   render(){
