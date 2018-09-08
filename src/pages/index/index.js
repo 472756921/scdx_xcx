@@ -6,13 +6,29 @@ export default  class Main extends Component {
         navigationBarTitleText: '首页',
     }
     componentWillMount(){
-        //console.log("111111111111");
-        /*Taro.navigateTo({
+        /*console.log("111111111111");
+        Taro.navigateTo({
             url:'/pages/login/index'
-        })*/
-    }
+        });*/
 
+       // console.log("userData", Taro.getStorageSync('userData'));
+        /*if(!Taro.getStorageSync('userData')){
+            Taro.redirectTo({
+                url:'/pages/login/index'
+            });
+        }*/
+    }
+  componentDidMount(){
+    console.log("111111111111");
+      /**
+       * 这里就初始化数据
+       */
+  }
     render(){
+        /**
+         *  UserData
+         */
+        //console.log("UserData---------------");
         return <View className='index_main'>
               <View className='title'>XX专题培训班教学安排</View>
           <ScrollView className='scrollview'
