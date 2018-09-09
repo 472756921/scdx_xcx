@@ -3,10 +3,11 @@ import { AtTabs, AtTabsPane } from 'taro-ui'
 import { View, Text, Button,ScrollView} from '@tarojs/components'
 import EducationItem from '../../components/educationEvaluation'
 import './index.less'
+import base from '../../util'
 
 export default class EducatonEvalution extends Component{
     config = {
-      navigationBarTitleText: '教学评价',
+      navigationBarTitleText: '教学评估',
     }
     constructor(props){
         super(props);
@@ -18,9 +19,9 @@ export default class EducatonEvalution extends Component{
         let userData = Taro.getStorageSync("userData"), _this =  this;
         Taro.request({
             method:'POST',
-            url: 'http://202.115.33.207:8080/teachingEvaluate/getData.do',
+            url:base.url2+'/teachingEvaluate/getData.do',
             data: {
-                itemId: 16||userData.itemId,
+                itemId: userData.itemId,
             },
             header: {
                 'content-type': 'application/x-www-form-urlencoded' // 默认值
@@ -43,17 +44,17 @@ export default class EducatonEvalution extends Component{
 
     render(){
         //console.log("educationData",this.state.educationData);
-        let { educationData } =  this.state, _this =  this;
-
+        let { educationData } =  this.state, _this =  this,
+        classType =  Taro.getStorageSync("classType");
         return <View className='educationMain'>
             <View className='educationTop'>
                 <View>
                   <View>培训班次：</View>
-                  <View>四川大学——广西壮族自治区国土资源系统女性干部专题研讨班</View>
+                  <View>{classType.className||''}</View>
                 </View>
                 <View>
                   <View>培训时间：</View>
-                  <View>2018.5.7-5.11</View>
+                  <View>{classType.start&&classType.start.replace(/-/g,".")||''}-{classType.end&&classType.end.replace(/-/g,".")||''}</View>
                 </View>
             </View>
           <ScrollView

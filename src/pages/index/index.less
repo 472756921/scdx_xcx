@@ -12,9 +12,11 @@
   margin: 0 auto;
 }
 .tr-Content{
-  .tr{
-    border-left: 1px solid #ccc;
-  }
+  border-left: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+ /* .tr{
+
+  }*/
   >.tr:last-child{
     border-bottom: 1px solid #ccc;
   }
@@ -32,13 +34,11 @@
   justify-content: center;
   text-align: center;
   height:100%;
-  line-height: 2rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
   border-right: 1px solid #ccc;
   border-top: 1px solid #ccc;
- /* border: 1px solid #ccc;*/
 }
 .bg-w{
  background: snow;
@@ -67,6 +67,8 @@
     margin-bottom: 10px;
   }
   >.num{
-    font-size:24px;
+    font-size:26px;
+    color: #999;
+    line-height: 46px;
   }
 }

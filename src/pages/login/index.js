@@ -1,7 +1,7 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Form , Button,Input} from '@tarojs/components'
 import { connect } from '@tarojs/redux'
-
+import base  from '../../util'
 import { add, minus, asyncAdd } from '../../actions/counter'
 
 import './index.less'
@@ -50,16 +50,24 @@ class Index extends Component {
 
   login(){
        // let studentId =  this.refs.studentId.value
-     // console.log("studentId",this.state.studentId);
+    // console.log("studentId",this.refs.inputValue);
       let _this =  this;
 
       wx.login({
           success: function(res) {
               // console.log("res",res);
               if (res.code) {
+                if(!_this.state.studentId){
+                  Taro.showToast({
+                    title: '请先输入学号',
+                    icon: 'none',
+                    duration: 1000
+                  })
+                  return;
+                }
                   //发起网络请求
                   wx.request({
-                      url: 'http://202.115.33.207:8080/weChat/login.do',
+                      url: base.url+'/weChat/login.do',
                       data: {
                           code: res.code,
                           studentCard: _this.state.studentId
@@ -71,7 +79,13 @@ class Index extends Component {
                                   url: "/pages/index/index"
                               });
                               Taro.setStorageSync("userData",res.data.data)
-                          }
+                            return;
+                          };
+                        Taro.showToast({
+                          title: res.data.msg,
+                          icon: 'none',
+                          duration: 2000
+                        })
                       }
                   })
               } else {
@@ -99,7 +113,7 @@ class Index extends Component {
           <View className='formLogin'>
               <View className='line-box'>
                   <View className='name'>学号</View>
-                  <View><Input type='text' onChange={this.putStudentId.bind(this)} placeholder='请输入学号' name='studentId' value={this.state.studentId}/></View>
+                  <View><Input type='text' onChange={this.putStudentId.bind(this)} placeholder='请输入学号' name='studentId' value={this.state.studentId} ref='inputValue'/></View>
               </View>
               {/*<View className='line-box'>
                   <View className='name'>密码</View>

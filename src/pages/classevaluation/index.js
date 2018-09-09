@@ -2,7 +2,7 @@ import Taro, { Component } from '@tarojs/taro'
 import { AtTabs, AtTabsPane } from 'taro-ui'
 import { View, Radio, RadioGroup, Label, Button, Text, Textarea } from '@tarojs/components'
 import './index.less'
-
+import base from '../../util'
 export default  class ClassEvaluation extends Component{
   constructor(props){
     super(props);
@@ -49,7 +49,9 @@ export default  class ClassEvaluation extends Component{
       },
     };
   }
-
+  config = {
+    navigationBarTitleText: '班级评估',
+  }
   /**
    * 初始化数据
    * @param index
@@ -62,7 +64,7 @@ export default  class ClassEvaluation extends Component{
     let userData = Taro.getStorageSync("userData"), _this =  this;
     Taro.request({
       method:'POST',
-      url: 'http://202.115.33.207:8080/gradeEvaluate/getData.do',
+      url: base.url2+'/gradeEvaluate/getData.do',
       data: {
         itemId: userData.itemId,
         studentId:userData.studentId
@@ -224,14 +226,27 @@ export default  class ClassEvaluation extends Component{
     }
 
     wx.request({
-      url: 'http://202.115.33.207:8080'+url, //仅为示例，并非真实的接口地址
+      url: base.url2+url, //仅为示例，并非真实的接口地址
       data: datas,
       method: 'post',
       header: {
         'content-type': 'application/json' // 默认值
       },
       success: function(res) {
-        console.log(res.data)
+        //console.log(res.data)
+        if(res.data.msg === "Success"){
+          Taro.showToast({
+            title: "评估成功",
+            icon: 'none',
+            duration: 2000
+          })
+          return;
+        }
+        Taro.showToast({
+          title: res.data.msg,
+          icon: 'none',
+          duration: 2000
+        })
       }
     })
   }
@@ -240,212 +255,219 @@ export default  class ClassEvaluation extends Component{
     const tabList1 = [{ title: '教学管理评估' }, { title: '后勤服务评估' }, { title: '综合评估' },  { title: '建议' }]
     let  postList =  this.state.postList, postList2 =  this.state.postList2,  postList3 =  this.state.postList3,
       postList4 =  this.state.postList4;
-
+    let classType =  Taro.getStorageSync("classType");
+    console.log("classType",classType);
     return  <View className='panel'>
        <View className='panel__title'>
-         培训班次：四川大学——广西壮族自治区国土资源系统女性干部专题研讨班
-         <View>培训时间：2018.5.7-5.11</View>
+         培训班次：{classType.className||''}
+         <View>培训时间：{classType.start&&classType.start.replace(/-/g,".")||''}-{classType.end&&classType.end.replace(/-/g,".")||''}</View>
        </View>
        <View className='panel__content'>
          <AtTabs current={this.state.current} tabList={tabList1} onClick={this.handleClick.bind(this)} style={{height:'100%'}}>
            <AtTabsPane>
-             <View className='tab-content'>
-               专题班主题：
-                 <RadioGroup onChange={this.radioChange.bind(this,'classTheme')}>
-                   {this.state.list.map((item, i) => {
-                     return (
-                       <Label className='radio-list__label' for={i} key={i}>
-                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={(postList.classTheme == item.value||item.value == '1'||false)}> {item.text} </Radio>
-                       </Label>
-                     )
-                   })}
-                 </RadioGroup>
+             <View className='classevaluationContent'>
+                <View className='tab-content'>
+                  <Text className='title'>专题班主题：</Text>
+                    <RadioGroup onChange={this.radioChange.bind(this,'classTheme')}>
+                      {this.state.list.map((item, i) => {
+                        return (
+                          <Label className='radio-list__label' for={i} key={i}>
+                            <Radio className='radio-list__radio' value={item.value} checked={(postList.classTheme == item.value||item.value == '1'||false)}> {item.text} </Radio>
+                          </Label>
+                        )
+                      })}
+                    </RadioGroup>
+                </View>
+                <View className='tab-content'>
+                  <Text className='title'>课程设置：</Text>
+                    <RadioGroup onChange={this.radioChange.bind(this,'courses')}>
+                      {this.state.list.map((item, i) => {
+                        return (
+                          <Label className='radio-list__label' for={i} key={i}>
+                            <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={(postList.courses == item.value||item.value == '1'||false)}> {item.text} </Radio>
+                          </Label>
+                        )
+                      })}
+                    </RadioGroup>
+                </View>
+                <View className='tab-content'>
+                  <Text className='title'>教学内容：</Text>
+                    <RadioGroup onChange={this.radioChange.bind(this,'details')}>
+                      {this.state.list.map((item, i) => {
+                        return (
+                          <Label className='radio-list__label' for={i} key={i}>
+                            <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={(postList.details == item.value||item.value == '1'||false)}> {item.text} </Radio>
+                          </Label>
+                        )
+                      })}
+                    </RadioGroup>
+                </View>
+                <View className='tab-content'>
+                  <Text className='title'>教学方式：</Text>
+                    <RadioGroup onChange={this.radioChange.bind(this,'mode')}>
+                      {this.state.list.map((item, i) => {
+                        return (
+                          <Label className='radio-list__label' for={i} key={i}>
+                            <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={(postList.mode == item.value||item.value == '1'||false)}> {item.text} </Radio>
+                          </Label>
+                        )
+                      })}
+                    </RadioGroup>
+                </View>
+                <View className='tab-content'>
+                  <Text className='title'>资料准备：</Text>
+                    <RadioGroup onChange={this.radioChange.bind(this,'datum')} >
+                      {this.state.list.map((item, i) => {
+                        return (
+                          <Label className='radio-list__label' for={i} key={i}>
+                            <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={(postList.datum == item.value||item.value == '1'||false)}> {item.text} </Radio>
+                          </Label>
+                        )
+                      })}
+                    </RadioGroup>
+                </View>
+                <View className='tab-content'>
+                  <Text className='title'>教学组织协调：</Text>
+                    <RadioGroup onChange={this.radioChange.bind(this,'coordinate')} >
+                      {this.state.list.map((item, i) => {
+                        return (
+                          <Label className='radio-list__label' for={i} key={i}>
+                            <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={(postList.coordinate == item.value||item.value == '1'||false)}> {item.text} </Radio>
+                          </Label>
+                        )
+                      })}
+                    </RadioGroup>
+                </View>
+                <View className='tab-content'>
+                  <Text className='title'>班级管理服务：</Text>
+                    <RadioGroup onChange={this.radioChange.bind(this,'classServe')} >
+                      {this.state.list.map((item, i) => {
+                        return (
+                          <Label className='radio-list__label' for={i} key={i}>
+                            <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={(postList.classServe == item.value||item.value == '1'||false)}> {item.text} </Radio>
+                          </Label>
+                        )
+                      })}
+                    </RadioGroup>
+                </View>
+                <Button size='mini' style={{display:'block',background:'#05bb04',color:'#fff', margin:'1rem auto', 'width':'100px'}} onClick={this.tijiao.bind(this, 1)}>提交</Button>
              </View>
-             <View className='tab-content'>
-               课程设置： &nbsp;&nbsp;
-                 <RadioGroup onChange={this.radioChange.bind(this,'courses')}>
-                   {this.state.list.map((item, i) => {
-                     return (
-                       <Label className='radio-list__label' for={i} key={i}>
-                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={(postList.courses == item.value||item.value == '1'||false)}> {item.text} </Radio>
-                       </Label>
-                     )
-                   })}
-                 </RadioGroup>
-             </View>
-             <View className='tab-content'>
-               教学内容： &nbsp;&nbsp;
-                 <RadioGroup onChange={this.radioChange.bind(this,'details')}>
-                   {this.state.list.map((item, i) => {
-                     return (
-                       <Label className='radio-list__label' for={i} key={i}>
-                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={(postList.details == item.value||item.value == '1'||false)}> {item.text} </Radio>
-                       </Label>
-                     )
-                   })}
-                 </RadioGroup>
-             </View>
-             <View className='tab-content'>
-               教学方式： &nbsp;&nbsp;
-                 <RadioGroup onChange={this.radioChange.bind(this,'mode')}>
-                   {this.state.list.map((item, i) => {
-                     return (
-                       <Label className='radio-list__label' for={i} key={i}>
-                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={(postList.mode == item.value||item.value == '1'||false)}> {item.text} </Radio>
-                       </Label>
-                     )
-                   })}
-                 </RadioGroup>
-             </View>
-             <View className='tab-content'>
-               资料准备： &nbsp;&nbsp;
-                 <RadioGroup onChange={this.radioChange.bind(this,'datum')} >
-                   {this.state.list.map((item, i) => {
-                     return (
-                       <Label className='radio-list__label' for={i} key={i}>
-                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={(postList.datum == item.value||item.value == '1'||false)}> {item.text} </Radio>
-                       </Label>
-                     )
-                   })}
-                 </RadioGroup>
-             </View>
-             <View className='tab-content'>
-               教学组织协调：
-                 <RadioGroup onChange={this.radioChange.bind(this,'coordinate')} >
-                   {this.state.list.map((item, i) => {
-                     return (
-                       <Label className='radio-list__label' for={i} key={i}>
-                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={(postList.coordinate == item.value||item.value == '1'||false)}> {item.text} </Radio>
-                       </Label>
-                     )
-                   })}
-                 </RadioGroup>
-             </View>
-             <View className='tab-content'>
-               班级管理服务：
-                 <RadioGroup onChange={this.radioChange.bind(this,'classServe')} >
-                   {this.state.list.map((item, i) => {
-                     return (
-                       <Label className='radio-list__label' for={i} key={i}>
-                         <Radio className='radio-list__radio_2 radio-list__radio' value={item.value} checked={(postList.classServe == item.value||item.value == '1'||false)}> {item.text} </Radio>
-                       </Label>
-                     )
-                   })}
-                 </RadioGroup>
-             </View>
-             <Button size='mini' style={{display:'block', margin:'1rem auto', 'width':'100px'}} onClick={this.tijiao.bind(this, 1)}>提交</Button>
            </AtTabsPane>
 
            <AtTabsPane style='line-height: 24px'>
-             <Text className='tab-content' style={{float:'left',height: '90px'}}>餐饮：</Text>
-             <View className='tab-content'>
-               菜品卫生
-               <RadioGroup onChange={this.radioChange_t.bind(this,'dish')}>
-                 {this.state.list.map((item, i) => {
-                   return (
-                     <Label className='radio-list__label' for={i} key={i}>
-                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList2.dish == item.value||item.value == '1'||false)}> {item.text} </Radio>
-                     </Label>
-                   )
-                 })}
-               </RadioGroup>
-               <Text style={{marginTop:'10px',distplay:'block'}}>就餐环境与服务</Text>
-               <RadioGroup onChange={this.radioChange_t.bind(this,'environmentServe')}>
-                 {this.state.list.map((item, i) => {
-                   return (
-                     <Label className='radio-list__label' for={i} key={i}>
-                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList2.environmentServe == item.value||item.value == '1'||false)}> {item.text} </Radio>
-                     </Label>
-                   )
-                 })}
-               </RadioGroup>
+             <View className='classevaluationContent'>
+               <Text className='tab-content' style={{float:'left',height: '90px'}}>餐饮：</Text>
+               <View className='tab-content'>
+                 菜品卫生
+                 <RadioGroup onChange={this.radioChange_t.bind(this,'dish')}>
+                   {this.state.list.map((item, i) => {
+                     return (
+                       <Label className='radio-list__label' for={i} key={i}>
+                         <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList2.dish == item.value||item.value == '1'||false)}> {item.text} </Radio>
+                       </Label>
+                     )
+                   })}
+                 </RadioGroup>
+                 <Text style={{marginTop:'10px',distplay:'block'}}>就餐环境与服务</Text>
+                 <RadioGroup onChange={this.radioChange_t.bind(this,'environmentServe')}>
+                   {this.state.list.map((item, i) => {
+                     return (
+                       <Label className='radio-list__label' for={i} key={i}>
+                         <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList2.environmentServe == item.value||item.value == '1'||false)}> {item.text} </Radio>
+                       </Label>
+                     )
+                   })}
+                 </RadioGroup>
+               </View>
+               <Text className='tab-content' style={{float:'left',height: '90px'}}>住宿：</Text>
+               <View className='tab-content'>
+                 房间设施与卫生条件
+                 <RadioGroup  onChange={this.radioChange_t.bind(this,'roomHealth')}>
+                   {this.state.list.map((item, i) => {
+                     return (
+                       <Label className='radio-list__label' for={i} key={i}>
+                         <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList2.roomHealth == item.value||item.value == '1'||false)}> {item.text} </Radio>
+                       </Label>
+                     )
+                   })}
+                 </RadioGroup>
+                 <Text style={{marginTop:'10px',distplay:'block'}}>客房服务及时有效</Text>
+                 <RadioGroup  onChange={this.radioChange_t.bind(this,'roomServe')}>
+                   {this.state.list.map((item, i) => {
+                     return (
+                       <Label className='radio-list__label' for={i} key={i}>
+                         <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList2.roomServe == item.value||item.value == '1'||false)}> {item.text} </Radio>
+                       </Label>
+                     )
+                   })}
+                 </RadioGroup>
+               </View>
+               <Text className='tab-content' style={{float:'left',height: '90px'}}>交通：</Text>
+               <View className='tab-content'>
+                 接送及时
+                 <RadioGroup  onChange={this.radioChange_t.bind(this,'pickUp')}>
+                   {this.state.list.map((item, i) => {
+                     return (
+                       <Label className='radio-list__label' for={i} key={i}>
+                         <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList2.pickUp == item.value||item.value == '1'||false)}> {item.text} </Radio>
+                       </Label>
+                     )
+                   })}
+                 </RadioGroup>
+                 <Text style={{marginTop:'10px',distplay:'block'}}>司机态度</Text>
+                 <RadioGroup onChange={this.radioChange_t.bind(this,'driverAttitude')}>
+                   {this.state.list.map((item, i) => {
+                     return (
+                       <Label className='radio-list__label' for={i} key={i}>
+                         <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList2.driverAttitude == item.value||item.value == '1'||false)}> {item.text} </Radio>
+                       </Label>
+                     )
+                   })}
+                 </RadioGroup>
+               </View>
+               <Button size='mini' style={{display:'block',background:'#05bb04',color:'#fff', margin:'1rem auto', 'width':'100px'}} onClick={this.tijiao.bind(this, 2)}>提交</Button>
              </View>
-             <Text className='tab-content' style={{float:'left',height: '90px'}}>住宿：</Text>
-             <View className='tab-content'>
-               房间设施与卫生条件
-               <RadioGroup  onChange={this.radioChange_t.bind(this,'roomHealth')}>
-                 {this.state.list.map((item, i) => {
-                   return (
-                     <Label className='radio-list__label' for={i} key={i}>
-                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList2.roomHealth == item.value||item.value == '1'||false)}> {item.text} </Radio>
-                     </Label>
-                   )
-                 })}
-               </RadioGroup>
-               <Text style={{marginTop:'10px',distplay:'block'}}>客房服务及时有效</Text>
-               <RadioGroup  onChange={this.radioChange_t.bind(this,'roomServe')}>
-                 {this.state.list.map((item, i) => {
-                   return (
-                     <Label className='radio-list__label' for={i} key={i}>
-                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList2.roomServe == item.value||item.value == '1'||false)}> {item.text} </Radio>
-                     </Label>
-                   )
-                 })}
-               </RadioGroup>
-             </View>
-             <Text className='tab-content' style={{float:'left',height: '90px'}}>交通：</Text>
-             <View className='tab-content'>
-               接送及时
-               <RadioGroup  onChange={this.radioChange_t.bind(this,'pickUp')}>
-                 {this.state.list.map((item, i) => {
-                   return (
-                     <Label className='radio-list__label' for={i} key={i}>
-                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList2.pickUp == item.value||item.value == '1'||false)}> {item.text} </Radio>
-                     </Label>
-                   )
-                 })}
-               </RadioGroup>
-               <Text style={{marginTop:'10px',distplay:'block'}}>司机态度</Text>
-               <RadioGroup onChange={this.radioChange_t.bind(this,'driverAttitude')}>
-                 {this.state.list.map((item, i) => {
-                   return (
-                     <Label className='radio-list__label' for={i} key={i}>
-                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList2.driverAttitude == item.value||item.value == '1'||false)}> {item.text} </Radio>
-                     </Label>
-                   )
-                 })}
-               </RadioGroup>
-             </View>
-             <Button size='mini' style={{display:'block', margin:'1rem auto', 'width':'100px'}} onClick={this.tijiao.bind(this, 2)}>提交</Button>
            </AtTabsPane>
 
            <AtTabsPane style='line-height: 24px'>
-             <View className='tab-content'>
-               您对本期培训班的总体满意度是
-               <RadioGroup onChange={this.radioChange_s.bind(this,'globalSatisfaction')}>
-                 {this.state.list.map((item, i) => {
-                   return (
-                     <Label className='radio-list__label' for={i} key={i}>
-                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList3.globalSatisfaction == item.value||item.value == '1'||false)}> {item.text} </Radio>
-                     </Label>
-                   )
-                 })}
+             <View className='classevaluationContent'>
+               <View className='tab-content'>
+                 您对本期培训班的总体满意度是
+                 <RadioGroup onChange={this.radioChange_s.bind(this,'globalSatisfaction')}>
+                   {this.state.list.map((item, i) => {
+                     return (
+                       <Label className='radio-list__label' for={i} key={i}>
+                         <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList3.globalSatisfaction == item.value||item.value == '1'||false)}> {item.text} </Radio>
+                       </Label>
+                     )
+                   })}
 
-               </RadioGroup>
-               <Text style={{marginTop:'10px',distplay:'block'}}>您参加本期培训后的总体感觉是</Text>
-               <RadioGroup onChange={this.radioChange_s.bind(this,'globalFeel')}>
-                 {this.state.list.map((item, i) => {
-                   return (
-                     <Label className='radio-list__label' for={i} key={i}>
-                       <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList3.globalFeel == item.value||item.value == '1'||false)}> {item.text} </Radio>
-                     </Label>
-                   )
-                 })}
-               </RadioGroup>
+                 </RadioGroup>
+                 <Text style={{marginTop:'10px',distplay:'block'}}>您参加本期培训后的总体感觉是</Text>
+                 <RadioGroup onChange={this.radioChange_s.bind(this,'globalFeel')}>
+                   {this.state.list.map((item, i) => {
+                     return (
+                       <Label className='radio-list__label' for={i} key={i}>
+                         <Radio className='radio-list__radio_1 radio-list__radio' value={item.value} checked={(postList3.globalFeel == item.value||item.value == '1'||false)}> {item.text} </Radio>
+                       </Label>
+                     )
+                   })}
+                 </RadioGroup>
+               </View>
+               <Button size='mini' style={{display:'block',background:'#05bb04',color:'#fff', margin:'1rem auto', 'width':'100px'}} onClick={this.tijiao.bind(this, 3)}>提交</Button>
              </View>
-             <Button size='mini' style={{display:'block', margin:'1rem auto', 'width':'100px'}} onClick={this.tijiao.bind(this, 3)}>提交</Button>
            </AtTabsPane>
 
            <AtTabsPane>
-             <View className='tab-content'>
-               <Text>自己的收获主要是</Text>
-               <Textarea onInput={this.radioChange_f.bind(this,'overallSatisfaction')} value={postList4.overallSatisfaction} style='margin: 6px;background:#fff;width:85%;min-height:80px;padding:0 30rpx;border:1px solid #eee' autoHeight/>
-               <Text>您对改进培训班的意见和建议</Text>
-               <Textarea onInput={this.radioChange_f.bind(this,'commentSuggestion')} value={postList4.commentSuggestion} style='margin: 6px;background:#fff;width:85%;min-height:80px;padding:0 30rpx;border:1px solid #eee' autoHeight/>
+             <View className='classevaluationContent'>
+               <View className='tab-content' style='ling-height: 40px'>
+                 <Text>自己的收获主要是</Text>
+                 <Textarea onInput={this.radioChange_f.bind(this,'overallSatisfaction')} value={postList4.overallSatisfaction} style='margin: 6px;background:#fff;width:85%;min-height:80px;padding:20rpx;border:1px solid #eee' autoHeight/>
+                 <Text>您对改进培训班的意见和建议</Text>
+                 <Textarea onInput={this.radioChange_f.bind(this,'commentSuggestion')} value={postList4.commentSuggestion} style='margin: 6px;background:#fff;width:85%;min-height:80px;padding:20rpx;border:1px solid #eee' autoHeight/>
+               </View>
+               <Button size='mini' style={{display:'block', margin:'1rem auto', 'width':'100px',background:'#05bb04',color:'#fff'}} onClick={this.tijiao.bind(this, 4)}>提交</Button>
              </View>
-
-
-             <Button size='mini' style={{display:'block', margin:'1rem auto', 'width':'100px'}} onClick={this.tijiao.bind(this, 4)}>提交</Button>
            </AtTabsPane>
          </AtTabs>
        </View>

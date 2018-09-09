@@ -1,10 +1,13 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Textarea,Label,Radio, Button,RadioGroup} from '@tarojs/components'
 import './index.less'
-import { AtToast } from 'taro-ui'
-
+import base from '../../util'
 
 export default class EducatonEvalution extends Component{
+
+  config = {
+    navigationBarTitleText: "教学评估",
+  }
   constructor(props){
     super(props);
     let detail =  Taro.getStorageSync("datile");
@@ -28,10 +31,6 @@ export default class EducatonEvalution extends Component{
         "commentSuggestion":detail.commentSuggestion&&detail.commentSuggestion||"",                     //您对教学水平和课程的其他意见和建议
         "setUpCourse":detail.setUpCourse&&detail.setUpCourse||""                     //在后期培训中希望开设哪方面的专题和课程
       },
-      AtToast:{
-        isOpened:false,
-        text:''
-      }
     };
   }
   radioChange(type,t){
@@ -77,7 +76,7 @@ export default class EducatonEvalution extends Component{
     }
 
     wx.request({
-      url: 'http://202.115.33.207:8080/teachingEvaluate/data.do',
+      url:base.url2+'/teachingEvaluate/data.do',
       data: datas,
       method: 'post',
       header: {
@@ -88,16 +87,16 @@ export default class EducatonEvalution extends Component{
          * 如果成功则，提交
          */
         if(res.data.msg === "Success"){
-          let AtToast =  {
-            isOpened:true,
-            text: detail.id === null ?'新增成功':'修改成功'
-          }
-          _this.setState({"AtToast":AtToast});
+          Taro.showToast({
+            title: detail.id === null ?'新增成功':'修改成功',
+            icon: 'none',
+            duration: 1000
+          });
           setTimeout(()=>{
             Taro.reLaunch({
               url: "/pages/educationevaluation/index"
             });
-          }, 2000)
+          }, 1200)
         }
       }
     })
@@ -115,7 +114,7 @@ export default class EducatonEvalution extends Component{
     let postList =  this.state.postList;
     //console.log("postList",postList)
     return(
-      <View className='educationMain_datile' style='font-size:14px;line-height: 30px; padding: 10px'>
+      <View className='educationMain_datile' style='font-size:12px;line-height: 30px; padding: 10px'>
         <View className='tab-content'>
           教学态度：
           <RadioGroup onChange={this.radioChange.bind(this, 'attitude')}>
@@ -172,11 +171,7 @@ export default class EducatonEvalution extends Component{
           <View>在后期培训中希望开设哪方面的专题和课程</View>
           <Textarea onInput={this.radioChange.bind(this,'setUpCourse')} value={postList.setUpCourse} style='margin: 6px;background:#fff;width:85%;min-height:80px;padding:0 30rpx;border:1px solid #eee' autoHeight/>
         </View>
-        <Button size='mini' style={{display:'block', margin:'1rem auto', 'width':'100px'}} onClick={this.tijiao.bind(this)}>提交</Button>
-        <AtToast
-          isOpened={this.state.AtToast.isOpened}
-          text={this.state.AtToast.text} hasMask={true} >
-        </AtToast>
+        <Button size='mini' style={{display:'block',background:'#05bb04',color:'#fff', margin:'1rem auto', 'width':'100px'}} onClick={this.tijiao.bind(this)}>提交</Button>
       </View>
     )
 

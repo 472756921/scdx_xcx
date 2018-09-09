@@ -36,30 +36,30 @@ class App extends Component {
 
                 pagePath: 'pages/index/index',
                 text: '首页',
-                iconPath: 'asset/tabBar_icon_index.png',
-                selectedIconPath: 'asset/tabBar_icon_index_select.png'
+                iconPath: 'asset/home.png',
+                selectedIconPath: 'asset/home_ac.png'
             },
             {
                 pagePath: "pages/classevaluation/index",
                 text: "班级评估",
-                iconPath: "asset/tabBar_icon_order.png",
-                selectedIconPath: "asset/tabBar_icon_order_select.png"
+                iconPath: "asset/b.png",
+                selectedIconPath: "asset/b_ac.png"
             },
             {
               pagePath: "pages/educationevaluation/index",
               text: "教学评估",
-              iconPath: "asset/tabBar_icon_order.png",
-              selectedIconPath: "asset/tabBar_icon_order_select.png"
+              iconPath: "asset/pr.png",
+              selectedIconPath: "asset/pr_ac.png"
             },
            {
               pagePath: "pages/my/index",
               text: "我的",
-              iconPath: "asset/tabBar_icon_main.png",
-              selectedIconPath: "asset/tabBar_icon_main_select.png"
+              iconPath: "asset/user.png",
+              selectedIconPath: "asset/user_ac.png"
             }
         ],
         color:"#9B9B9B",
-        selectedColor:"#559EF7",
+        selectedColor:"#05bb04",
     }
   }
 
