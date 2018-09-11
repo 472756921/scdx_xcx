@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text, Input, Button, Image,ScrollView } from '@tarojs/components'
+import { View, Text, Input, Button, Image,ScrollView, RichText  } from '@tarojs/components'
 import './index.less'
 import Tr from './tr'
 import  base  from '../../util'
@@ -76,12 +76,13 @@ export default  class Main extends Component {
       }
     })
   }
+
   render(){
         /**
          *  UserData
          */
         let pagesData =  this.state.pagesData;
-        console.log("pagesData",pagesData.infoList);
+        //console.log("pagesData",pagesData.infoList);
         return <View className='index_main'>
               <View className='title'>{pagesData.itemName}</View>
           <ScrollView className='scrollview'

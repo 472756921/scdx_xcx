@@ -12,7 +12,9 @@ export default class EducationList extends Component{
         if(!item){return}
         return <View className='educationContent'>
             <View className='common double'>
-                <View><Text>课程名称：</Text>{item.courseName}</View>
+                <View><Text>课程名称：</Text>
+                    {item.courseName}
+                </View>
                 <View><Button className='btn-max-w' plain type='primary' onClick={this.clickItem.bind(this,item)}>评估</Button></View>
             </View>
             <View className='common' style={{'line-height':'30px'}}>

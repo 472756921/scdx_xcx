@@ -6,11 +6,11 @@ export default class Tr extends Component{
   render(){
     let item =  this.props.item;
     return <View className='tr' >
-      <View className='td'><View>{item.date}</View></View>
-      <View className='td'><View>{item.time}</View></View>
-      <View className='td'><View>{item.course}</View></View>
-      <View className='td'><View>{item.courseType}</View></View>
-      <View className='td normal'><View>{item.classroomAddress}</View></View>
+      <View className='td normal'><View>{item.date||''}</View></View>
+      <View className='td normal'><View>{item.time||''}</View></View>
+      <View className='td normal'><View>{item.course||''}</View></View>
+      <View className='td normal'><View>{item.courseType||''}</View></View>
+      <View className='td normal'><View>{item.classroomAddress||''}</View></View>
     </View>
   }
 }
